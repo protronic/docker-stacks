@@ -72,6 +72,19 @@ RUN git clone https://github.com/PAIR-code/facets.git && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
+# Install elatic client
+RUN conda install --quiet --yes \
+    'elasticsearch' \
+    'elasticsearch-dsl' \    
+    && \
+    conda clean --all -f -y
+
+# Install jupyterlab-git
+RUN conda install --quiet --yes 'jupyterlab-git' && \
+    conda clean --all -f -y && \
+    jupyter serverextension enable --py --sys-prefix jupyterlab_git && \
+    jupyter labextension install @jupyterlab/git@^0.20.0
+
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME="/home/${NB_USER}/.cache/"
 
